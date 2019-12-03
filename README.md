@@ -33,6 +33,8 @@ Phone Book представляет собой пример телефонной
   mvn clean install
  ```
 #### Api приложения:####
- `http://[yourhost]/phonebook-api.html`
+ ```
+http://[yourhost]/phonebook-api.html
+ ```
 P.S. Тестирование выполняется на H2, но лучше тестировать на той БД, на которой работает приложение.
  
