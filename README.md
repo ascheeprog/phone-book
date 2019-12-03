@@ -32,7 +32,7 @@ Phone Book представляет собой пример телефонной
  ```
   mvn clean install
  ```
-#### Api приложения:####
+#### Api приложения ####
  ```
 http://[yourhost]/phonebook-api.html
  ```
