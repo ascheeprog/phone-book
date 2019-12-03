@@ -11,12 +11,13 @@ Phone Book представляет собой пример телефонной
   + Поиск по номеру телефона или по id контакта для телефонной книги пользователя
   + Список всех контактов пользователя
 #### Запуск приложения ####
-Для начала создать БД с таблицами:
+Создать базу данных с таблицами:
 ```
  create table users(
  id serial primary key,
  first_name varchar(255) not null,
  last_name varchar(255));
+ 
  create table contact(
  id serial primary key,
  first_name varchar(255),
@@ -25,3 +26,4 @@ Phone Book представляет собой пример телефонной
  email varchar(255),
  users_id integer references users (id));
  ```
+ После создания изменить название базы данных(если не совпадает с прописанным) в файле  >appliction.proterties
