@@ -1,11 +1,12 @@
 package ru.example.domain;
 
+import org.flywaydb.test.annotation.FlywayTest;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
-import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.junit4.SpringRunner;
 import ru.example.repository.ContactRepository;
 import ru.example.repository.UserRepository;
@@ -21,9 +22,10 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.*;
 import static org.junit.Assert.assertTrue;
 
+@AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
+@FlywayTest
 @RunWith(SpringRunner.class)
 @DataJpaTest
-@TestPropertySource("/application-test.properties")
 public class ContactTest {
     @Autowired
     private ContactRepository contactRepository;
