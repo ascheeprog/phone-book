@@ -17,8 +17,7 @@ import javax.validation.constraints.Pattern;
 public class Contact {
 
     @Id
-    @GeneratedValue(generator = "contact_generator", strategy = GenerationType.SEQUENCE)
-    @SequenceGenerator(sequenceName = "contact_id_seq", name = "contact_generator", allocationSize = 1, initialValue = 1)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
     private String firstName;
