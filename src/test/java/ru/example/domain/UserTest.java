@@ -86,18 +86,15 @@ public class UserTest {
 
     @Test
     public void givenUsers_whenSaveUsers_thenGetAllUsersFromDB() {
-        List<User> users = new ArrayList<>();
-        users.add(user1);
-        users.add(user2);
-
         repository.save(user1);
         repository.save(user2);
 
         List<User> usersFromDB = repository.findAll();
 
         assertThat(usersFromDB, notNullValue());
-        assertThat(usersFromDB.size(), is(2));
-        assertThat(usersFromDB, containsInAnyOrder(users.toArray(new User[0])));
+        assertThat(usersFromDB.size(), is(4));
+        assertThat(usersFromDB, hasItem(user1));
+        assertThat(usersFromDB, hasItem(user2));
     }
 
     @Test
