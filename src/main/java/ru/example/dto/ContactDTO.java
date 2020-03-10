@@ -25,7 +25,4 @@ public class ContactDTO {
 
     @Email
     private String email;
-
-    @NotNull
-    private UserDTO user;
 }

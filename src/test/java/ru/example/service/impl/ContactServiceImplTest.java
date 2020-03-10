@@ -75,9 +75,6 @@ public class ContactServiceImplTest {
 
         ContactDTO contactDTO = contactService.add(user1.getId(), contact1);
 
-        assertThat(contactDTO.getUser().getFirstName(), is(user1.getFirstName()));
-        assertThat(contactDTO.getUser().getLastName(), is(user1.getLastName()));
-        assertThat(contactDTO.getUser().getId(), is(user1.getId()));
         assertThat(contactDTO.getId(), is(contact1.getId()));
         assertThat(contactDTO.getFirstName(), is(contact1.getFirstName()));
         assertThat(contactDTO.getLastName(), is(contact1.getLastName()));
@@ -102,9 +99,6 @@ public class ContactServiceImplTest {
         List<ContactDTO> contactDTOList = contactService.getAll(user.getId());
 
         assertThat(contactDTOList.size(), is(1));
-        assertThat(contactDTOList.get(0).getUser().getFirstName(), is(user.getFirstName()));
-        assertThat(contactDTOList.get(0).getUser().getLastName(), is(user.getLastName()));
-        assertThat(contactDTOList.get(0).getUser().getId(), is(user.getId()));
         assertThat(contactDTOList.get(0).getPhone(), is(contact1.getPhone()));
         assertThat(contactDTOList.get(0).getFirstName(), is(contact1.getFirstName()));
         assertThat(contactDTOList.get(0).getId(), is(contact1.getId()));
@@ -136,9 +130,6 @@ public class ContactServiceImplTest {
         assertThat(contactDTOS.get(0).getFirstName(), is(contact1.getFirstName()));
         assertThat(contactDTOS.get(0).getLastName(), is(contact1.getLastName()));
         assertThat(contactDTOS.get(0).getId(), is(contact1.getId()));
-        assertThat(contactDTOS.get(0).getUser().getId(), is(user.getId()));
-        assertThat(contactDTOS.get(0).getUser().getFirstName(), is(user.getFirstName()));
-        assertThat(contactDTOS.get(0).getUser().getLastName(), is(user.getLastName()));
         verify(contactRepository, times(1)).findByPhoneAndUserId("1234567890", user.getId());
         verify(userRepository, times(1)).existsById(user.getId());
     }
@@ -154,9 +145,6 @@ public class ContactServiceImplTest {
         assertThat(contactDTOS.get(0).getFirstName(), is(contact1.getFirstName()));
         assertThat(contactDTOS.get(0).getLastName(), is(contact1.getLastName()));
         assertThat(contactDTOS.get(0).getId(), is(contact1.getId()));
-        assertThat(contactDTOS.get(0).getUser().getId(), is(user.getId()));
-        assertThat(contactDTOS.get(0).getUser().getFirstName(), is(user.getFirstName()));
-        assertThat(contactDTOS.get(0).getUser().getLastName(), is(user.getLastName()));
         verify(contactRepository, times(1)).findByPhoneAndUserId("1234567890", user.getId());
     }
 
@@ -171,9 +159,6 @@ public class ContactServiceImplTest {
         assertThat(contactDTO.getFirstName(), is(contact1.getFirstName()));
         assertThat(contactDTO.getLastName(), is(contact1.getLastName()));
         assertThat(contactDTO.getPhone(), is(contact1.getPhone()));
-        assertThat(contactDTO.getUser().getId(), is(user.getId()));
-        assertThat(contactDTO.getUser().getFirstName(), is(user.getFirstName()));
-        assertThat(contactDTO.getUser().getLastName(), is(user.getLastName()));
         verify(contactRepository, times(1)).findByIdAndUserId(1, 1);
         verify(userRepository, times(1)).existsById(1);
     }
@@ -202,9 +187,6 @@ public class ContactServiceImplTest {
 
         ContactDTO contactDTO = contactService.change(1, 1, contact2);
 
-        assertThat(contactDTO.getUser().getFirstName(), is(user.getFirstName()));
-        assertThat(contactDTO.getUser().getLastName(), is(user.getLastName()));
-        assertThat(contactDTO.getUser().getId(), is(user.getId()));
         assertThat(contactDTO.getPhone(), is(contact2.getPhone()));
         assertThat(contactDTO.getFirstName(), is(contact2.getFirstName()));
         assertThat(contactDTO.getLastName(), is(contact2.getLastName()));

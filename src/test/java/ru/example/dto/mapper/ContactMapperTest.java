@@ -48,7 +48,6 @@ public class ContactMapperTest {
 
         assertThat(dto.getPhone(), is(contact.getPhone()));
         assertThat(dto.getFirstName(), is(contact.getFirstName()));
-        assertThat(dto.getUser().getFirstName(), is(contact.getUser().getFirstName()));
     }
 
     @Test
@@ -56,24 +55,16 @@ public class ContactMapperTest {
         ContactDTO dto = new ContactDTO();
 
         Set<ConstraintViolation<ContactDTO>> violation = validate.validate(dto);
-        assertThat(violation.size(),is(3));
+        assertThat(violation.size(),is(2));
     }
 
-    @Test
-    public void givenContactDto_whenCreateContactDto_thenOneConstraintViolationsNullUser(){
-        ContactDTO dto = new ContactDTO();
-        dto.setPhone("1234567891");
-
-        Set<ConstraintViolation<ContactDTO>> violation = validate.validate(dto);
-        assertThat(violation.size(),is(1));
-    }
     @Test
     public void givenContactDto_whenCreateContactDto_thenTwoConstraintViolationsPatternNumberPhoneAndNullUser(){
         ContactDTO dto = new ContactDTO();
         dto.setPhone("1");
 
         Set<ConstraintViolation<ContactDTO>> violation = validate.validate(dto);
-        assertThat(violation.size(),is(2));
+        assertThat(violation.size(),is(1));
     }
 
     @Test
@@ -81,7 +72,6 @@ public class ContactMapperTest {
         UserDTO userDTO = new UserDTO();
         userDTO.setFirstName("Bob");
         ContactDTO dto = new ContactDTO();
-        dto.setUser(userDTO);
 
         Set<ConstraintViolation<ContactDTO>> violation = validate.validate(dto);
         assertThat(violation.size(),is(2));
@@ -94,11 +84,9 @@ public class ContactMapperTest {
 
         ContactDTO contactDTO = new ContactDTO();
         contactDTO.setPhone("1234567890");
-        contactDTO.setUser(userDTO);
 
         Contact contact = contactMapper.DtoToContact(contactDTO);
 
-        assertThat(contactDTO.getUser().getFirstName(),is(contactDTO.getUser().getFirstName()));
         assertThat(contactDTO.getPhone(),is(contact.getPhone()));
         assertThat(contactDTO.getFirstName(),is(contact.getFirstName()));
     }
@@ -122,8 +110,6 @@ public class ContactMapperTest {
 
         assertThat(contactDTOS.size(),is(contacts.size()));
         assertThat(contactDTOS.get(0).getPhone(),is(contacts.get(0).getPhone()));
-        assertThat(contactDTOS.get(0).getUser().getFirstName(),is(contacts.get(0).getUser().getFirstName()));
         assertThat(contactDTOS.get(1).getPhone(),is(contacts.get(1).getPhone()));
-        assertThat(contactDTOS.get(1).getUser().getFirstName(),is(contacts.get(1).getUser().getFirstName()));
     }
 }

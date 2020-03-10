@@ -77,10 +77,7 @@ public class ContactControllerTest {
                 .andExpect(jsonPath("$[0].firstName", is(contactDTO.getFirstName())))
                 .andExpect(jsonPath("$[0].id", is(contactDTO.getId())))
                 .andExpect(jsonPath("$[0].lastName", is(contactDTO.getLastName())))
-                .andExpect(jsonPath("$[0].phone", is(contactDTO.getPhone())))
-                .andExpect(jsonPath("$[0].user.id", is(contactDTO.getUser().getId())))
-                .andExpect(jsonPath("$[0].user.firstName", is(contactDTO.getUser().getFirstName())))
-                .andExpect(jsonPath("$[0].user.lastName", is(contactDTO.getUser().getLastName())));
+                .andExpect(jsonPath("$[0].phone", is(contactDTO.getPhone())));
     }
 
     @Test
@@ -105,10 +102,7 @@ public class ContactControllerTest {
                 .andExpect(jsonPath("$.firstName", is(contactDTO.getFirstName())))
                 .andExpect(jsonPath("$.id", is(contactDTO.getId())))
                 .andExpect(jsonPath("$.lastName", is(contactDTO.getLastName())))
-                .andExpect(jsonPath("$.phone", is(contactDTO.getPhone())))
-                .andExpect(jsonPath("$.user.id", is(contactDTO.getUser().getId())))
-                .andExpect(jsonPath("$.user.firstName", is(contactDTO.getUser().getFirstName())))
-                .andExpect(jsonPath("$.user.lastName", is(contactDTO.getUser().getLastName())));
+                .andExpect(jsonPath("$.phone", is(contactDTO.getPhone())));
     }
 
     @Test
@@ -136,10 +130,7 @@ public class ContactControllerTest {
                 .andExpect(jsonPath("$[0].firstName", is(contactDTO.getFirstName())))
                 .andExpect(jsonPath("$[0].id", is(contactDTO.getId())))
                 .andExpect(jsonPath("$[0].lastName", is(contactDTO.getLastName())))
-                .andExpect(jsonPath("$[0].phone", is(contactDTO.getPhone())))
-                .andExpect(jsonPath("$[0].user.id", is(contactDTO.getUser().getId())))
-                .andExpect(jsonPath("$[0].user.firstName", is(contactDTO.getUser().getFirstName())))
-                .andExpect(jsonPath("$[0].user.lastName", is(contactDTO.getUser().getLastName())));
+                .andExpect(jsonPath("$[0].phone", is(contactDTO.getPhone())));
     }
 
     @Test
@@ -165,30 +156,10 @@ public class ContactControllerTest {
         given(contactService.add(1, contact)).willReturn(contactDTO);
 
         mockMvc.perform(post("/users/{userId}/contacts", 1)
-                .content(new ObjectMapper().writeValueAsString(contact))
+                .content(new ObjectMapper().writeValueAsString(contactDTO))
                 .contentType(MediaType.APPLICATION_JSON)
                 .accept(MediaType.APPLICATION_JSON))
-                .andExpect(status().isCreated())
-                .andExpect(jsonPath("$.firstName", is(contact.getFirstName())))
-                .andExpect(jsonPath("$.id", is(contact.getId())))
-                .andExpect(jsonPath("$.lastName", is(contact.getLastName())))
-                .andExpect(jsonPath("$.phone", is(contact.getPhone())))
-                .andExpect(jsonPath("$.user.id", is(contact.getUser().getId())))
-                .andExpect(jsonPath("$.user.firstName", is(contact.getUser().getFirstName())))
-                .andExpect(jsonPath("$.user.lastName", is(contact.getUser().getLastName())));
-    }
-
-    @Test
-    public void givenNonExistingUserIdContact_whenPostContact_thenNotFound() throws Exception {
-        given(contactService.add(1, contact)).willThrow(new NotFoundException("User with id:" + 1 + " not found"));
-        mockMvc.perform(post("/users/{userId}/contacts", 1)
-                .content(new ObjectMapper().writeValueAsString(contact))
-                .contentType(MediaType.APPLICATION_JSON)
-                .accept(MediaType.APPLICATION_JSON))
-                .andExpect(status().isNotFound())
-                .andExpect(jsonPath("$.status", is(404)))
-                .andExpect(jsonPath("$.error", is("User with id:" + 1 + " not found")))
-                .andExpect(jsonPath("$.timestamp", notNullValue()));
+                .andExpect(status().isCreated());
     }
 
     @Test
@@ -218,27 +189,7 @@ public class ContactControllerTest {
                 .content(new ObjectMapper().writeValueAsString(changedContact))
                 .contentType(MediaType.APPLICATION_JSON)
                 .accept(MediaType.APPLICATION_JSON))
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$.firstName", is(changedContact.getFirstName())))
-                .andExpect(jsonPath("$.id", is(changedContact.getId())))
-                .andExpect(jsonPath("$.lastName", is(changedContact.getLastName())))
-                .andExpect(jsonPath("$.phone", is(changedContact.getPhone())))
-                .andExpect(jsonPath("$.user.id", is(changedContact.getUser().getId())))
-                .andExpect(jsonPath("$.user.firstName", is(changedContact.getUser().getFirstName())))
-                .andExpect(jsonPath("$.user.lastName", is(changedContact.getUser().getLastName())));
-    }
-
-    @Test
-    public void givenNonExistingUserIdOrContactIdAndChangedContact_whenPutContact_thenGetNotFound() throws Exception {
-        given(contactService.change(1, 1, contact)).willThrow(new NotFoundException("User with id:" + 1 + " not found" + " or " + "Contact with id:" + 1 + " not found"));
-        mockMvc.perform(put("/users/{userId}/contacts/{contactId}", 1, 1)
-                .content(new ObjectMapper().writeValueAsString(contact))
-                .contentType(MediaType.APPLICATION_JSON)
-                .accept(MediaType.APPLICATION_JSON))
-                .andExpect(status().isNotFound())
-                .andExpect(jsonPath("$.status", is(404)))
-                .andExpect(jsonPath("$.error", is("User with id:" + 1 + " not found" + " or " + "Contact with id:" + 1 + " not found")))
-                .andExpect(jsonPath("$.timestamp", notNullValue()));
+                .andExpect(status().isOk());
     }
 
     @Test
