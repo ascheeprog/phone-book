@@ -1,5 +1,6 @@
 package ru.example.controller.advice;
 
+import org.jetbrains.annotations.NotNull;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -48,6 +49,7 @@ public class ResponseExceptionHandler extends ResponseEntityExceptionHandler {
         return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
     }
 
+    @NotNull
     @Override
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     protected ResponseEntity<Object> handleMethodArgumentNotValid(MethodArgumentNotValidException ex,
@@ -63,11 +65,12 @@ public class ResponseExceptionHandler extends ResponseEntityExceptionHandler {
         return new ResponseEntity<>(errors, status);
     }
 
+    @NotNull
     @Override
     protected ResponseEntity<Object> handleHttpMediaTypeNotSupported(HttpMediaTypeNotSupportedException ex,
-                                                                     HttpHeaders headers,
+                                                                     @NotNull HttpHeaders headers,
                                                                      HttpStatus status,
-                                                                     WebRequest request) {
+                                                                     @NotNull WebRequest request) {
         ErrorResponse response = new ErrorResponse();
         response.setStatus(status.value());
         response.setError(ex.getMessage());
