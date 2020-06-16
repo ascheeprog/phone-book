@@ -39,7 +39,7 @@ public class ContactServiceImpl implements ContactService {
 
     @Override
     @Transactional
-    public ContactDTO findById(Integer contactId, Integer userId) {
+    public ContactDTO findById(Integer userId, Integer contactId) {
         if (!userRepository.existsById(userId)) {
             throw new NotFoundException("User with id:" + userId + " not found");
         }
