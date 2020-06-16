@@ -9,7 +9,7 @@ public interface ContactService {
 
     List<ContactDTO> findByPhone(String numberPhone, Integer userId);
 
-    ContactDTO findById(Integer contactId, Integer userId);
+    ContactDTO findById(Integer userId, Integer contactId);
 
     List<ContactDTO> getAll(Integer userId);
 

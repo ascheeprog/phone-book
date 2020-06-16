@@ -14,7 +14,7 @@ import java.util.List;
 @RestController
 public class ContactController {
     private final ContactService contactService;
-    private ContactMapper mapper = Mappers.getMapper(ContactMapper.class);
+    private final ContactMapper mapper = Mappers.getMapper(ContactMapper.class);
 
     public ContactController(ContactService contactService) {
         this.contactService = contactService;
