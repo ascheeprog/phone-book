@@ -15,9 +15,9 @@ import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 import ru.example.domain.User;
 import ru.example.dto.UserDTO;
-import ru.example.dto.mapper.UserMapper;
+import ru.example.mapper.UserMapper;
 import ru.example.exception.NotFoundException;
-import ru.example.service.UserService;
+import ru.example.service.JpaClient;
 
 import java.util.Collections;
 import java.util.List;
@@ -34,13 +34,13 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @RunWith(SpringRunner.class)
 public class UserControllerTest {
 
-    private UserMapper userMapper = Mappers.getMapper(UserMapper.class);
+    private final UserMapper userMapper = Mappers.getMapper(UserMapper.class);
 
     @Autowired
     private MockMvc mockMvc;
 
     @MockBean
-    private UserService userService;
+    private JpaClient client;
 
     private User user;
 
@@ -58,7 +58,7 @@ public class UserControllerTest {
     public void givenUsers_whenGetUsers_thenReturnJsonArray() throws Exception {
         List<UserDTO> userDTOS = Collections.singletonList(userDTO);
 
-        given(userService.getAll()).willReturn(userDTOS);
+        given(client.getAll()).willReturn(userDTOS);
 
         mockMvc.perform(get("/users")
                 .contentType(MediaType.APPLICATION_JSON))
@@ -70,7 +70,7 @@ public class UserControllerTest {
 
     @Test
     public void givenNonExistsUsers_whenGetUsers_thenGetNotFound() throws Exception {
-        given(userService.getAll()).willThrow(new NotFoundException("Users not found"));
+        given(client.getAll()).willThrow(new NotFoundException("Users not found"));
 
         mockMvc.perform(get("/users")
                 .contentType(MediaType.APPLICATION_JSON))
@@ -82,7 +82,7 @@ public class UserControllerTest {
 
     @Test
     public void givenUserId_whenGetUser_thenReturnJsonUser() throws Exception {
-        given(userService.findById(1)).willReturn(userDTO);
+        given(client.findById(1)).willReturn(userDTO);
 
         mockMvc.perform(get("/users/{usersId}", 1)
                 .contentType(MediaType.APPLICATION_JSON))
@@ -93,7 +93,7 @@ public class UserControllerTest {
 
     @Test
     public void givenNonExistingUserId_whenGetUser_thenGetNotFound() throws Exception {
-        given(userService.findById(1)).willThrow(new NotFoundException("User with this id: " + 1 + " not found"));
+        given(client.findById(1)).willThrow(new NotFoundException("User with this id: " + 1 + " not found"));
 
         mockMvc.perform(get("/users/{usersId}", 1)
                 .contentType(MediaType.APPLICATION_JSON))
@@ -107,7 +107,7 @@ public class UserControllerTest {
     public void givenUserName_whenGetUser_thenReturnJsonArray() throws Exception {
         List<UserDTO> userDTOS = Collections.singletonList(userDTO);
 
-        given(userService.findByName("LeBlank")).willReturn(userDTOS);
+        given(client.findByName("LeBlank")).willReturn(userDTOS);
         mockMvc.perform(get("/users/search").param("name", "LeBlank")
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
@@ -118,7 +118,7 @@ public class UserControllerTest {
 
     @Test
     public void givenNonExistingUserName_whenGetUser_thenGetNotFound() throws Exception {
-        given(userService.findByName("Loran")).willThrow(new NotFoundException("User with this name: " + "Loran" + " not found"));
+        given(client.findByName("Loran")).willThrow(new NotFoundException("User with this name: " + "Loran" + " not found"));
 
         mockMvc.perform(get("/users/search", 1).param("name", "Loran")
                 .contentType(MediaType.APPLICATION_JSON))
@@ -130,7 +130,7 @@ public class UserControllerTest {
 
     @Test
     public void givenUser_whenPostUser_thenReturnJsonUser() throws Exception {
-        given(userService.add(user)).willReturn(userDTO);
+        given(client.add(user)).willReturn(userDTO);
 
         mockMvc.perform(post("/users")
                 .content(new ObjectMapper().writeValueAsString(userDTO))
@@ -158,7 +158,7 @@ public class UserControllerTest {
         user1.setFirstName("Rick");
         user1.setLastName("Romanov");
         UserDTO userDTO1 = userMapper.userToDto(user1);
-        given(userService.change(1, user1)).willReturn(userDTO1);
+        given(client.change(1, user1)).willReturn(userDTO1);
 
         mockMvc.perform(put("/users/{userId}", 1)
                 .content(new ObjectMapper().writeValueAsString(user1))
@@ -187,7 +187,7 @@ public class UserControllerTest {
         user1.setFirstName("Rick");
         user1.setLastName("Romanov");
         UserDTO userDTO1 = userMapper.userToDto(user1);
-        given(userService.change(1, user1)).willThrow(new NotFoundException("User with this id: " + 1 + " not found"));
+        given(client.change(1, user1)).willThrow(new NotFoundException("User with this id: " + 1 + " not found"));
 
         mockMvc.perform(put("/users/{userId}", 1)
                 .content(new ObjectMapper().writeValueAsString(user1))
@@ -210,7 +210,7 @@ public class UserControllerTest {
 
     @Test
     public void givenNonExistingUserId_whenDeleteUser_thenGetNotFound() throws Exception {
-        doThrow(new NotFoundException("User with this: " + 1 + "not found")).when(userService).delete(1);
+        doThrow(new NotFoundException("User with this: " + 1 + "not found")).when(client).delete(1);
 
         mockMvc.perform(delete("/users/{userId}", 1)
                 .contentType(MediaType.APPLICATION_JSON))

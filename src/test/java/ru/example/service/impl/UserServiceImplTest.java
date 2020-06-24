@@ -30,7 +30,7 @@ public class UserServiceImplTest {
     private UserRepository repository;
 
     @Autowired
-    private UserService userService;
+    private UserServiceImpl userService;
 
     private User user;
 

@@ -6,7 +6,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 import ru.example.domain.User;
 import ru.example.dto.UserDTO;
-import ru.example.dto.mapper.UserMapper;
+import ru.example.mapper.UserMapper;
 import ru.example.exception.NotFoundException;
 import ru.example.repository.UserRepository;
 import ru.example.service.UserService;
@@ -21,7 +21,7 @@ import java.util.Optional;
 public class UserServiceImpl implements UserService {
 
     private final UserRepository repository;
-    private UserMapper mapper = Mappers.getMapper(UserMapper.class);
+    private final UserMapper mapper = Mappers.getMapper(UserMapper.class);
 
     public UserServiceImpl(UserRepository repository) {
         this.repository = repository;
@@ -41,7 +41,8 @@ public class UserServiceImpl implements UserService {
     @Transactional
     public UserDTO findById(Integer id) {
         Optional<User> user = repository.findById(id);
-        return user.map(value -> mapper.userToDto(value)).orElseThrow(() -> new NotFoundException("User with this id: " + id + " not found"));
+        return user.map(mapper::userToDto)
+                .orElseThrow(() -> new NotFoundException("User with this id: " + id + " not found"));
     }
 
     @Override
@@ -71,7 +72,7 @@ public class UserServiceImpl implements UserService {
     @Override
     @Transactional
     public UserDTO add(User user) {
-        log.info("User with this firstName:{} and lastName:{} is created",user.getFirstName(),user.getLastName());
+        log.info("User with this firstName:{} and lastName:{} is created", user.getFirstName(), user.getLastName());
         return mapper.userToDto(repository.save(user));
     }
 

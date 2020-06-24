@@ -1,4 +1,4 @@
-package ru.example.dto.mapper;
+package ru.example.mapper;
 
 import org.mapstruct.Mapper;
 import ru.example.domain.Contact;

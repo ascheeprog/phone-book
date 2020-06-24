@@ -1,4 +1,4 @@
-package ru.example.dto.mapper;
+package ru.example.mapper;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -10,6 +10,7 @@ import ru.example.domain.Contact;
 import ru.example.domain.User;
 import ru.example.dto.ContactDTO;
 import ru.example.dto.UserDTO;
+import ru.example.mapper.ContactMapper;
 
 import javax.validation.ConstraintViolation;
 import javax.validation.Validation;
@@ -25,7 +26,7 @@ import static org.hamcrest.Matchers.is;
 @SpringBootTest
 @RunWith(SpringRunner.class)
 public class ContactMapperTest {
-    private ContactMapper contactMapper = Mappers.getMapper(ContactMapper.class);
+    private final ContactMapper contactMapper = Mappers.getMapper(ContactMapper.class);
 
     private Validator validate;
 

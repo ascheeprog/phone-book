@@ -11,6 +11,7 @@ last_name varchar(255),
 phone varchar(16) not null,
 email varchar(255),
 users_id int references users (id)
+    on delete cascade
 );
 
 

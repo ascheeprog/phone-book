@@ -16,9 +16,9 @@ import org.springframework.test.web.servlet.MockMvc;
 import ru.example.domain.Contact;
 import ru.example.domain.User;
 import ru.example.dto.ContactDTO;
-import ru.example.dto.mapper.ContactMapper;
+import ru.example.mapper.ContactMapper;
 import ru.example.exception.NotFoundException;
-import ru.example.service.ContactService;
+import ru.example.service.JpaClient;
 
 import java.util.Collections;
 import java.util.List;
@@ -35,13 +35,13 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @RunWith(SpringRunner.class)
 public class ContactControllerTest {
 
-    private ContactMapper contactMapper = Mappers.getMapper(ContactMapper.class);
+    private final ContactMapper contactMapper = Mappers.getMapper(ContactMapper.class);
 
     @Autowired
     private MockMvc mockMvc;
 
     @MockBean
-    private ContactService contactService;
+    private JpaClient client;
 
     private User user;
     private Contact contact;
@@ -68,7 +68,7 @@ public class ContactControllerTest {
     public void givenUserId_whenGetContacts_thenReturnJsonArray() throws Exception {
         List<ContactDTO> contacts = Collections.singletonList(contactDTO);
 
-        given(contactService.getAll(1)).willReturn(contacts);
+        given(client.getAll(1)).willReturn(contacts);
 
         mockMvc.perform(get("/users/{userId}/contacts", 1)
                 .contentType(MediaType.APPLICATION_JSON))
@@ -82,7 +82,7 @@ public class ContactControllerTest {
 
     @Test
     public void givenNonExistsContactsOrUserId_whenGetContacts_thenGetNotFound() throws Exception {
-        given(contactService.getAll(1)).willThrow(new NotFoundException("Contacts not found or user with this id:" + 1 + " not found"));
+        given(client.getAll(1)).willThrow(new NotFoundException("Contacts not found or user with this id:" + 1 + " not found"));
 
         mockMvc.perform(get("/users/{userId}/contacts", 1)
                 .contentType(MediaType.APPLICATION_JSON))
@@ -94,7 +94,7 @@ public class ContactControllerTest {
 
     @Test
     public void givenUserIdAndContactId_whenGetContact_thenThenReturnJson() throws Exception {
-        given(contactService.findById(1, 1)).willReturn(contactDTO);
+        given(client.findById(1, 1)).willReturn(contactDTO);
 
         mockMvc.perform(get("/users/{userId}/contacts/{contactId}", 1, 1)
                 .contentType(MediaType.APPLICATION_JSON))
@@ -107,7 +107,7 @@ public class ContactControllerTest {
 
     @Test
     public void givenNonExistingContactIdOrUserId_whenGetContact_thenGetNotFound() throws Exception {
-        given(contactService.findById(1, 1)).willThrow(new NotFoundException("User with id:" + 1 + " not found" + " or " + "Contact with id:" + 1 + " not found"));
+        given(client.findById(1, 1)).willThrow(new NotFoundException("User with id:" + 1 + " not found" + " or " + "Contact with id:" + 1 + " not found"));
 
         mockMvc.perform(get("/users/{userId}/contacts/{contactId}", 1, 1)
                 .contentType(MediaType.APPLICATION_JSON))
@@ -121,7 +121,7 @@ public class ContactControllerTest {
     public void givenUserIdAndContactName_whenGetContacts_thenReturnJsonArray() throws Exception {
         List<ContactDTO> contacts = Collections.singletonList(contactDTO);
 
-        given(contactService.findByPhone("1234567890", 1)).willReturn(contacts);
+        given(client.findByPhone("1234567890", 1)).willReturn(contacts);
 
         mockMvc.perform(get("/users/{userId}/contacts/search", 1).param("number", "1234567890")
                 .contentType(MediaType.APPLICATION_JSON))
@@ -135,7 +135,7 @@ public class ContactControllerTest {
 
     @Test
     public void givenNonExistingContactNameOrUserId_whenGetContact_thenGetNotFound() throws Exception {
-        given(contactService.findByPhone("9876543210", 1))
+        given(client.findByPhone("9876543210", 1))
                 .willThrow(new NotFoundException("User with id:" + 1
                         + " not found"
                         + " or "
@@ -153,7 +153,7 @@ public class ContactControllerTest {
 
     @Test
     public void givenUserIdAndContact_whenPostContact_thenReturnJson() throws Exception {
-        given(contactService.add(1, contact)).willReturn(contactDTO);
+        given(client.add(1, contact)).willReturn(contactDTO);
 
         mockMvc.perform(post("/users/{userId}/contacts", 1)
                 .content(new ObjectMapper().writeValueAsString(contactDTO))
@@ -183,7 +183,7 @@ public class ContactControllerTest {
 
         ContactDTO changedContactDto = contactMapper.contactToDTO(changedContact);
 
-        given(contactService.change(1, 1, changedContact)).willReturn(changedContactDto);
+        given(client.change(1, 1, changedContact)).willReturn(changedContactDto);
 
         mockMvc.perform(put("/users/{userId}/contacts/{contactId}", 1, 1)
                 .content(new ObjectMapper().writeValueAsString(changedContact))
@@ -212,7 +212,7 @@ public class ContactControllerTest {
 
     @Test
     public void givenNonExistingUserIdOrContactId_whenRemoveContact_thenNotFound() throws Exception {
-        doThrow(new NotFoundException("User with id:" + 1 + " not found" + " or " + "Contact with id:" + 1 + " not found")).when(contactService).delete(1, 1);
+        doThrow(new NotFoundException("User with id:" + 1 + " not found" + " or " + "Contact with id:" + 1 + " not found")).when(client).delete(1, 1);
 
         mockMvc.perform(delete("/users/{userId}/contacts/{contactId}", 1, 1)
                 .contentType(MediaType.APPLICATION_JSON))

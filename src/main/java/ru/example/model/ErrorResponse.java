@@ -1,4 +1,4 @@
-package ru.example.controller.advice;
+package ru.example.model;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Data;
@@ -8,6 +8,7 @@ import java.time.LocalDateTime;
 
 @Data
 @NoArgsConstructor
+public
 class ErrorResponse {
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd hh:mm:ss")
     private LocalDateTime timestamp;

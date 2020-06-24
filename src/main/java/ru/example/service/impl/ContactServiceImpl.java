@@ -7,7 +7,7 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
 import org.springframework.transaction.annotation.Transactional;
 import ru.example.domain.Contact;
 import ru.example.dto.ContactDTO;
-import ru.example.dto.mapper.ContactMapper;
+import ru.example.mapper.ContactMapper;
 import ru.example.exception.NotFoundException;
 import ru.example.repository.ContactRepository;
 import ru.example.repository.UserRepository;
@@ -21,7 +21,7 @@ import java.util.List;
 public class ContactServiceImpl implements ContactService {
     private final ContactRepository contactRepository;
     private final UserRepository userRepository;
-    private ContactMapper mapper = Mappers.getMapper(ContactMapper.class);
+    private final ContactMapper mapper = Mappers.getMapper(ContactMapper.class);
 
     public ContactServiceImpl(ContactRepository contactRepository, UserRepository userRepository) {
         this.contactRepository = contactRepository;
@@ -43,7 +43,8 @@ public class ContactServiceImpl implements ContactService {
         if (!userRepository.existsById(userId)) {
             throw new NotFoundException("User with id:" + userId + " not found");
         }
-        return mapper.contactToDTO(contactRepository.findByIdAndUserId(contactId, userId).orElseThrow(() -> new NotFoundException("Contact with id:" + contactId + " not found")));
+        return mapper.contactToDTO(contactRepository.findByIdAndUserId(contactId, userId)
+                .orElseThrow(() -> new NotFoundException("Contact with id:" + contactId + " not found")));
     }
 
     @Override
@@ -67,7 +68,7 @@ public class ContactServiceImpl implements ContactService {
             log.info("Contact with this phone number:{} is created", contact.getPhone());
             return contactRepository.save(contact);
         }).orElseThrow(() ->
-            new NotFoundException("User with id:" + userId + " not found")));
+                new NotFoundException("User with id:" + userId + " not found")));
     }
 
     @Override
@@ -96,8 +97,9 @@ public class ContactServiceImpl implements ContactService {
         if (!userRepository.existsById(userId)) {
             throw new NotFoundException("User with id:" + userId + " not found");
         }
-        Contact contact = contactRepository.findByIdAndUserId(userId, contactId).orElseThrow(() -> new NotFoundException("Contact with id:" + contactId + " not found"));
-        log.info("Contact with this id:{} deleted",contactId);
+        Contact contact = contactRepository.findByIdAndUserId(userId, contactId)
+                .orElseThrow(() -> new NotFoundException("Contact with id:" + contactId + " not found"));
+        log.info("Contact with this id:{} deleted", contactId);
         contactRepository.delete(contact);
     }
 }

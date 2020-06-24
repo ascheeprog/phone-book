@@ -29,7 +29,7 @@ import static org.mockito.Mockito.*;
 public class ContactServiceImplTest {
 
     @Autowired
-    private ContactService contactService;
+    private ContactServiceImpl contactService;
 
     @MockBean
     private UserRepository userRepository;
@@ -71,7 +71,7 @@ public class ContactServiceImplTest {
         when(contactRepository.save(contact1)).thenReturn(contact1);
         when(userRepository.findById(user.getId())).thenReturn(java.util.Optional.of(user));
 
-        User user1 = userRepository.findById(user.getId()).get();
+        User user1 = userRepository.findById(user.getId()).orElseThrow();
 
         ContactDTO contactDTO = contactService.add(user1.getId(), contact1);
 

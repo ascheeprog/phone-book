@@ -1,4 +1,4 @@
-package ru.example.dto.mapper;
+package ru.example.mapper;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -8,6 +8,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 import ru.example.domain.User;
 import ru.example.dto.UserDTO;
+import ru.example.mapper.UserMapper;
 
 import javax.validation.ConstraintViolation;
 import javax.validation.Validation;
@@ -23,7 +24,7 @@ import static org.hamcrest.Matchers.is;
 @RunWith(SpringRunner.class)
 public class UserMapperTest {
 
-    private UserMapper userMapper = Mappers.getMapper(UserMapper.class);
+    private final UserMapper userMapper = Mappers.getMapper(UserMapper.class);
     private Validator validator;
 
     @Before
