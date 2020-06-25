@@ -1,9 +1,9 @@
 package ru.example.service.impl;
 
+import lombok.AllArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.mapstruct.factory.Mappers;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.EnableTransactionManagement;
 import org.springframework.transaction.annotation.Transactional;
 import ru.example.domain.Contact;
 import ru.example.dto.ContactDTO;
@@ -17,19 +17,14 @@ import java.util.List;
 
 @Log4j2
 @Service
-@EnableTransactionManagement
+@AllArgsConstructor
+@Transactional(readOnly = true)
 public class ContactServiceImpl implements ContactService {
     private final ContactRepository contactRepository;
     private final UserRepository userRepository;
     private final ContactMapper mapper = Mappers.getMapper(ContactMapper.class);
 
-    public ContactServiceImpl(ContactRepository contactRepository, UserRepository userRepository) {
-        this.contactRepository = contactRepository;
-        this.userRepository = userRepository;
-    }
-
     @Override
-    @Transactional
     public List<ContactDTO> findByPhone(String numberPhone, Integer userId) {
         if (!userRepository.existsById(userId)) {
             throw new NotFoundException("User with id:" + userId + " not found");
@@ -38,7 +33,6 @@ public class ContactServiceImpl implements ContactService {
     }
 
     @Override
-    @Transactional
     public ContactDTO findById(Integer userId, Integer contactId) {
         if (!userRepository.existsById(userId)) {
             throw new NotFoundException("User with id:" + userId + " not found");
@@ -48,7 +42,6 @@ public class ContactServiceImpl implements ContactService {
     }
 
     @Override
-    @Transactional
     public List<ContactDTO> getAll(Integer userId) {
         if (!userRepository.existsById(userId)) {
             throw new NotFoundException("User with id:" + userId + " not found");
@@ -101,5 +94,10 @@ public class ContactServiceImpl implements ContactService {
                 .orElseThrow(() -> new NotFoundException("Contact with id:" + contactId + " not found"));
         log.info("Contact with this id:{} deleted", contactId);
         contactRepository.delete(contact);
+    }
+
+    @Override
+    public long contactsCount() {
+       return contactRepository.count();
     }
 }

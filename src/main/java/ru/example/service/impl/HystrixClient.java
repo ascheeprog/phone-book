@@ -57,6 +57,11 @@ public class HystrixClient implements JpaClient {
     }
 
     @Override
+    public long contactsCount() {
+        return contactService.contactsCount();
+    }
+
+    @Override
     @HystrixCommand
     public List<UserDTO> findByName(String name) {
         return userService.findByName(name);
@@ -90,5 +95,10 @@ public class HystrixClient implements JpaClient {
     @HystrixCommand
     public void delete(Integer id) {
         userService.delete(id);
+    }
+
+    @Override
+    public long usersCount() {
+        return userService.usersCount();
     }
 }

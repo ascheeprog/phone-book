@@ -18,4 +18,6 @@ public interface ContactService {
     ContactDTO change(Integer userId, Integer contactId, Contact contact);
 
     void delete(Integer userId, Integer contactId);
+
+    long contactsCount();
 }

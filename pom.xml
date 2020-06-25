@@ -6,7 +6,7 @@
 
     <groupId>ru.example</groupId>
     <artifactId>rest-boot</artifactId>
-    <version>1.1-SNAPSHOT</version>
+    <version>0.0.1-SNAPSHOT</version>
 
     <parent>
         <groupId>org.springframework.boot</groupId>
@@ -105,7 +105,7 @@
             <version>1.12.4</version>
         </dependency>
 
-        <!--Histryx -->
+        <!--Hystrix -->
         <dependency>
             <groupId>org.springframework.cloud</groupId>
             <artifactId>spring-cloud-starter-netflix-hystrix</artifactId>
@@ -130,6 +130,11 @@
         <dependency>
             <groupId>io.micrometer</groupId>
             <artifactId>micrometer-registry-prometheus</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>io.micrometer</groupId>
+            <artifactId>micrometer-registry-jmx</artifactId>
         </dependency>
     </dependencies>
 

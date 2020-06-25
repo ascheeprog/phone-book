@@ -1,9 +1,10 @@
 package ru.example.service.impl;
 
+import lombok.AllArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.mapstruct.factory.Mappers;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.EnableTransactionManagement;
+import org.springframework.transaction.annotation.Transactional;
 import ru.example.domain.User;
 import ru.example.dto.UserDTO;
 import ru.example.mapper.UserMapper;
@@ -11,24 +12,20 @@ import ru.example.exception.NotFoundException;
 import ru.example.repository.UserRepository;
 import ru.example.service.UserService;
 
-import javax.transaction.Transactional;
 import java.util.List;
 import java.util.Optional;
 
 @Log4j2
 @Service
-@EnableTransactionManagement
+@AllArgsConstructor
+@Transactional(readOnly = true)
 public class UserServiceImpl implements UserService {
 
     private final UserRepository repository;
     private final UserMapper mapper = Mappers.getMapper(UserMapper.class);
 
-    public UserServiceImpl(UserRepository repository) {
-        this.repository = repository;
-    }
 
     @Override
-    @Transactional
     public List<UserDTO> findByName(String name) {
         List<User> users = repository.findAllByFirstNameIgnoreCaseStartingWith(name);
         if (users.isEmpty()) {
@@ -38,7 +35,6 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    @Transactional
     public UserDTO findById(Integer id) {
         Optional<User> user = repository.findById(id);
         return user.map(mapper::userToDto)
@@ -46,7 +42,6 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    @Transactional
     public List<UserDTO> getAll() {
         List<User> users = repository.findAll();
         if (users.isEmpty()) {
@@ -85,4 +80,11 @@ public class UserServiceImpl implements UserService {
             repository.delete(user.get());
         } else throw new NotFoundException("User with this: " + id + " not found");
     }
+
+    @Override
+    public long usersCount() {
+        return repository.count();
+    }
+
+
 }

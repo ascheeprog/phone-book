@@ -29,4 +29,6 @@ public interface UserService {
     UserDTO add(User user);
 
     void delete(Integer id);
+
+    long usersCount();
 }
